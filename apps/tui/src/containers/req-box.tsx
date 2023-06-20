@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import chalk from "chalk";
+import { type Destination } from "traffic-control";
 
-import { LogBox, Tab } from "../components/index.js";
+import { LogBox, TabInfo } from "../components/index.js";
 import type { FC } from "../types.js";
 import { useTrafficControl } from "../services/traffic-control.js";
 
 interface Props {
   active: boolean;
-  destination: "a" | "b";
+  destination: Destination;
   tabText: string;
 }
 
@@ -40,7 +41,11 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
   return (
     <>
       <LogBox active={active} logs={logs} />
-      <Tab active={active} text={tabText} />
+      <TabInfo
+        active={active}
+        text={tabText}
+        capturePaths={tCtrl.readDestination(destination).capturePaths}
+      />
     </>
   );
 };

@@ -1,6 +1,8 @@
 import http from "http";
 import EventEmitter from "events";
 
+export type Destination = "a" | "b";
+
 interface TrafficControlDestination {
   port: number;
   /** A list of globs that will capture paths that match */
@@ -8,7 +10,7 @@ interface TrafficControlDestination {
 }
 
 interface Target {
-  target: "a" | "b";
+  target: Destination;
 }
 
 interface OnRequestArg extends Target {
@@ -28,7 +30,7 @@ export interface TrafficControlArgs {
 }
 
 export class TrafficControl {
-  private target: "a" | "b" = "a";
+  private target: Destination = "a";
   private readonly server: http.Server;
   private readonly ee = new EventEmitter();
 
@@ -45,7 +47,7 @@ export class TrafficControl {
       this.args.b.capturePaths?.map((path) => new RegExp(path)) ?? [];
   }
 
-  private getDestination(path: string): "a" | "b" {
+  private getDestination(path: string): Destination {
     if (path === "") return this.target;
     if (this.aCapture.some((re) => re.test(path))) return "a";
     if (this.aCapture.some((re) => re.test(path))) return "b";
@@ -56,7 +58,8 @@ export class TrafficControl {
     clientRequest,
     clientResponse
   ): void => {
-    const port = this.getDestination(clientRequest.url ?? "");
+    const target = this.getDestination(clientRequest.url ?? "");
+    const port = this.args[target].port;
     const options = {
       hostname: "localhost",
       port,
@@ -71,7 +74,7 @@ export class TrafficControl {
       if (proxyResponse.errored != null) return;
       const statusCode = proxyResponse.statusCode ?? 0;
       this.ee.emit("request", {
-        target: this.target,
+        target,
         method: options.method ?? "<UNKNOWN>",
         path: options.path ?? "<NONE>",
         port: options.port,
@@ -100,7 +103,7 @@ export class TrafficControl {
     });
   };
 
-  public flipTo(val: "a" | "b"): void {
+  public flipTo(val: Destination): void {
     this.target = val;
   }
 
@@ -111,6 +114,12 @@ export class TrafficControl {
   public stop(): void {
     this.server.close();
     this.ee.removeAllListeners();
+  }
+
+  public readDestination(
+    dest: Destination
+  ): Readonly<TrafficControlDestination> {
+    return this.args[dest];
   }
 
   public on(event: "responseError", cb: (arg: OnErrorArg) => void): void;

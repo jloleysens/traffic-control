@@ -10,7 +10,12 @@ export function main(): void {
     return;
   }
   render(
-    <TrafficControlProvider a={env.portA} b={env.portB}>
+    <TrafficControlProvider
+      a={env.portA}
+      aCapture={env.captureA}
+      b={env.portB}
+      bCapture={env.captureB}
+    >
       <App />
     </TrafficControlProvider>
   );

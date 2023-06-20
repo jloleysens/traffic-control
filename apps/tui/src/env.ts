@@ -33,11 +33,11 @@ const cli = meow(
   }
 );
 
-const showHelp = cli.flags.help;
-const portA = cli.input.at(0) as unknown as string;
-const portB = cli.input.at(1) as unknown as string;
+const showHelp = cli.flags.help as unknown as boolean;
+const portA = parseInt(cli.input.at(0) as unknown as string, 10);
+const portB = parseInt(cli.input.at(1) as unknown as string, 10);
 
-if (showHelp !== true) {
+if (showHelp) {
   assert(
     // eslint-disable-next-line
     portA && portB,
@@ -46,7 +46,9 @@ if (showHelp !== true) {
 }
 
 export default {
-  showHelp: cli.flags.help,
+  showHelp,
   portA,
   portB,
+  captureA: cli.flags.aCapture?.split(","),
+  captureB: cli.flags.bCapture?.split(","),
 };

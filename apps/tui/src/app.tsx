@@ -27,28 +27,28 @@ export const App: React.FC = () => {
   });
 
   return (
-    <FullScreen>
-      <Box flexGrow={1} flexDirection="column">
-        <Box flexGrow={1}>
-          <Box flexGrow={1} flexShrink={0} width={1} flexDirection="column">
-            <ReqBox
-              active={active === "a"}
-              tabText={`[1] localhost:${a}`}
-              destination="a"
-            />
-          </Box>
-          <Box flexGrow={1} flexShrink={0} width={1} flexDirection="column">
-            <ReqBox
-              active={active === "b"}
-              tabText={`[2] localhost:${b}`}
-              destination="b"
-            />
-          </Box>
+    // <FullScreen>
+    <Box flexGrow={1} flexDirection="column">
+      <Box flexGrow={1}>
+        <Box flexGrow={1} flexShrink={0} width={1} flexDirection="column">
+          <ReqBox
+            active={active === "a"}
+            tabText={`[1] localhost:${a}`}
+            destination="a"
+          />
         </Box>
-        <Box flexGrow={0} justifyContent="center">
-          <Title />
+        <Box flexGrow={1} flexShrink={0} width={1} flexDirection="column">
+          <ReqBox
+            active={active === "b"}
+            tabText={`[2] localhost:${b}`}
+            destination="b"
+          />
         </Box>
       </Box>
-    </FullScreen>
+      <Box flexGrow={0} justifyContent="center">
+        <Title />
+      </Box>
+    </Box>
+    // </FullScreen>
   );
 };

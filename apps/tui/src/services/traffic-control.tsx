@@ -15,11 +15,22 @@ export const TrafficControlContext = createContext<undefined | Value>(
 interface Props {
   a: number;
   b: number;
+  aCapture?: string[];
+  bCapture?: string[];
 }
 
-export const TrafficControlProvider: FC<Props> = ({ a, b, children }) => {
+export const TrafficControlProvider: FC<Props> = ({
+  a,
+  aCapture,
+  b,
+  bCapture,
+  children,
+}) => {
   const [tCtrl] = useState(() =>
-    TrafficControl.from({ a: { port: a }, b: { port: b } })
+    TrafficControl.from({
+      a: { port: a, capturePaths: aCapture },
+      b: { port: b, capturePaths: bCapture },
+    })
   );
 
   useEffect(() => {

@@ -1,1 +1,5 @@
-export { TrafficControl, type TrafficControlArgs } from "./traffic-control.js";
+export {
+  TrafficControl,
+  type TrafficControlArgs,
+  type Destination,
+} from "./traffic-control.js";

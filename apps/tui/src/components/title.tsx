@@ -6,7 +6,7 @@ import type { FC } from "../types.js";
 export const Title: FC = memo(function Title() {
   return (
     <Gradient name="vice">
-      <BigText font="tiny" letterSpacing={10} space text="TrafficControl" />
+      <BigText font="tiny" letterSpacing={10} space text="TC" />
     </Gradient>
   );
 });

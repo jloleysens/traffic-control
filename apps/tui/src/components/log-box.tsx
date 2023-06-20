@@ -15,7 +15,7 @@ export const LogBox: React.FC<Props> = ({ logs, active }) => {
       justifyContent="flex-end"
       overflow="hidden"
       flexGrow={1}
-      height={1}
+      // height={1}
     >
       {logs.map((log, i) => (
         <Text key={i}>{log}</Text>
