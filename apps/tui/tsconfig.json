@@ -1,0 +1,16 @@
+{
+  "include": ["index.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "dist",
+    "target": "ES2017",
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "outDir": "dist",
+    "sourceMap": false
+  }
+}

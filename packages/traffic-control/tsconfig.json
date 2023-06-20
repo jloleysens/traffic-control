@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": false,
+    "target": "es2018",
+    "moduleResolution": "node16",
+    "module": "Node16",
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "sourceMap": true
+  }
+}
