@@ -7,7 +7,6 @@ import { App } from "./app.js";
 
 export function main(): void {
   if (env.showHelp) {
-    console.log(`Hello! Use this CLI like: TODO`);
     return;
   }
   render(

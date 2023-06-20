@@ -3,6 +3,8 @@ import EventEmitter from "events";
 
 interface TrafficControlDestination {
   port: number;
+  /** A list of globs that will capture paths that match */
+  capturePaths?: string[];
 }
 
 interface Target {
@@ -26,22 +28,35 @@ export interface TrafficControlArgs {
 }
 
 export class TrafficControl {
-  private flip: "a" | "b" = "a";
+  private target: "a" | "b" = "a";
   private readonly server: http.Server;
   private readonly ee = new EventEmitter();
 
+  private readonly aCapture: RegExp[];
+  private readonly bCapture: RegExp[];
   private constructor(private readonly args: TrafficControlArgs) {
     this.server = http.createServer(this.requestListener.bind(this));
     this.server.on("error", (error: Error): void => {
       this.ee.emit("error", error);
     });
+    this.aCapture =
+      this.args.a.capturePaths?.map((path) => new RegExp(path)) ?? [];
+    this.bCapture =
+      this.args.b.capturePaths?.map((path) => new RegExp(path)) ?? [];
+  }
+
+  private getDestination(path: string): "a" | "b" {
+    if (path === "") return this.target;
+    if (this.aCapture.some((re) => re.test(path))) return "a";
+    if (this.aCapture.some((re) => re.test(path))) return "b";
+    return this.target;
   }
 
   private readonly requestListener: http.RequestListener = (
     clientRequest,
     clientResponse
   ): void => {
-    const port = this.args[this.flip].port;
+    const port = this.getDestination(clientRequest.url ?? "");
     const options = {
       hostname: "localhost",
       port,
@@ -56,7 +71,7 @@ export class TrafficControl {
       if (proxyResponse.errored != null) return;
       const statusCode = proxyResponse.statusCode ?? 0;
       this.ee.emit("request", {
-        target: this.flip,
+        target: this.target,
         method: options.method ?? "<UNKNOWN>",
         path: options.path ?? "<NONE>",
         port: options.port,
@@ -70,7 +85,7 @@ export class TrafficControl {
 
     proxyRequest.on("error", (error): void => {
       Object.defineProperty(error, "target", {
-        value: this.flip,
+        value: this.target,
         enumerable: true,
       });
       this.ee.emit("responseError", error);
@@ -86,7 +101,7 @@ export class TrafficControl {
   };
 
   public flipTo(val: "a" | "b"): void {
-    this.flip = val;
+    this.target = val;
   }
 
   public start(): void {

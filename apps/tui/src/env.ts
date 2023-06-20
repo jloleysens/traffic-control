@@ -1,12 +1,43 @@
 import assert from "assert";
+import meow from "meow";
 
-const showHelp = process.argv[2] === "--help" || process.argv[2] === "-h";
+const cli = meow(
+  `
+    Usage
+      $ tctrl <portA> <portB>
 
-const portA = parseInt(process.argv[2], 10);
+    Options
+      --help, -h  Show this help message
+      --a-capture, -a  Paths that will always directed to port A
+      --b-capture, -b  Paths that will always directed to port B
 
-const portB = parseInt(process.argv[3], 10);
+`,
+  {
+    importMeta: import.meta,
+    autoHelp: true,
+    allowUnknownFlags: false,
+    flags: {
+      aCapture: {
+        type: "string",
+        shortFlag: "a",
+      },
+      bCapture: {
+        type: "string",
+        shortFlag: "b",
+      },
+      help: {
+        type: "boolean",
+        shortFlag: "h",
+      },
+    },
+  }
+);
 
-if (!showHelp) {
+const showHelp = cli.flags.help;
+const portA = cli.input.at(0) as unknown as string;
+const portB = cli.input.at(1) as unknown as string;
+
+if (showHelp !== true) {
   assert(
     // eslint-disable-next-line
     portA && portB,
@@ -15,7 +46,7 @@ if (!showHelp) {
 }
 
 export default {
-  showHelp,
+  showHelp: cli.flags.help,
   portA,
   portB,
 };
