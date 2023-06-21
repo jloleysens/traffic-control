@@ -13,14 +13,14 @@ interface Target {
   target: Destination;
 }
 
-interface OnRequestArg extends Target {
+export interface OnRequestArg extends Target {
   statusCode: number;
   method: string;
   path: string;
   port: number;
 }
 
-interface OnErrorArg extends Target {
+export interface OnErrorArg extends Target {
   error: Error;
 }
 
@@ -28,6 +28,8 @@ export interface TrafficControlArgs {
   a: TrafficControlDestination;
   b: TrafficControlDestination;
 }
+
+export const DEFAULT_PORT = 56015;
 
 export class TrafficControl {
   private target: Destination = "a";
@@ -50,7 +52,7 @@ export class TrafficControl {
   private getDestination(path: string): Destination {
     if (path === "") return this.target;
     if (this.aCapture.some((re) => re.test(path))) return "a";
-    if (this.aCapture.some((re) => re.test(path))) return "b";
+    if (this.bCapture.some((re) => re.test(path))) return "b";
     return this.target;
   }
 
@@ -91,7 +93,7 @@ export class TrafficControl {
         value: this.target,
         enumerable: true,
       });
-      this.ee.emit("responseError", error);
+      this.ee.emit("responseError", { error });
       clientResponse.writeHead(503);
       clientResponse.end(
         `Sorry, I tried to to connect to ${options.hostname}:${options.port}, but something went wrong: "${error.message}". Check that everything is up and running OK.`
@@ -108,7 +110,7 @@ export class TrafficControl {
   }
 
   public start(): void {
-    this.server.listen(56015);
+    this.server.listen(this.port);
   }
 
   public stop(): void {
@@ -120,6 +122,10 @@ export class TrafficControl {
     dest: Destination
   ): Readonly<TrafficControlDestination> {
     return this.args[dest];
+  }
+
+  public get port(): number {
+    return DEFAULT_PORT;
   }
 
   public on(event: "responseError", cb: (arg: OnErrorArg) => void): void;

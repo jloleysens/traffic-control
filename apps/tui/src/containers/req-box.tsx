@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import chalk from "chalk";
-import { type Destination } from "traffic-control";
+import {
+  type Destination,
+  type OnErrorArg,
+  type OnRequestArg,
+} from "traffic-control";
 
 import { LogBox, TabInfo } from "../components/index.js";
 import type { FC } from "../types.js";
@@ -9,10 +13,10 @@ import { useTrafficControl } from "../services/traffic-control.js";
 interface Props {
   active: boolean;
   destination: Destination;
-  tabText: string;
+  tabTitle: string;
 }
 
-export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
+export const ReqBox: FC<Props> = ({ active, tabTitle, destination }) => {
   const logsRef = useRef<string[]>([]);
   const timeoutHandle = useRef<undefined | any>(undefined);
   const [logs, setLogs] = useState<string[]>([]);
@@ -33,14 +37,26 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
     }, 100);
   }, []);
 
-  const onRequest = useCallback((req: any) => {
+  const onRequest = useCallback((req: OnRequestArg) => {
     if (req.target !== destination) return;
-    appendLog(`${chalk.green("request")} ${req.method} ${req.path}`);
+    const color =
+      req.statusCode < 200
+        ? chalk.grey
+        : req.statusCode < 399
+        ? chalk.green
+        : req.statusCode <= 499
+        ? chalk.yellow
+        : chalk.red;
+    appendLog(
+      `${chalk.grey("[")}${color(`${req.statusCode}`)}${chalk.grey(
+        "]"
+      )} ${chalk.grey(req.method)} ${req.path}`
+    );
   }, []);
 
-  const onError = useCallback((req: any) => {
+  const onError = useCallback((req: OnErrorArg) => {
     if (req.target !== destination) return;
-    appendLog(`${chalk.red("error")} ${req.message}`);
+    appendLog(`${chalk.red("error")} ${req.error.message}`);
   }, []);
 
   useEffect(() => {
@@ -65,7 +81,7 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
       <LogBox loading={loading} active={active} logs={logs} />
       <TabInfo
         active={active}
-        text={tabText}
+        text={tabTitle}
         capturePaths={tCtrl.readDestination(destination).capturePaths}
       />
     </>
