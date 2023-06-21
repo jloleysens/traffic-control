@@ -1,5 +1,5 @@
 import http from "http";
-import EventEmitter from "events";
+import EventEmitter from "node:events";
 
 export type Destination = "a" | "b";
 

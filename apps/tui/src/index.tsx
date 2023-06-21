@@ -9,6 +9,7 @@ export function main(): void {
   if (env.showHelp) {
     return;
   }
+  console.clear();
   render(
     <TrafficControlProvider
       a={env.portA}
