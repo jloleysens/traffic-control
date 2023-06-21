@@ -31,7 +31,6 @@ export const ReqBox: FC<Props> = ({ active, tabTitle, destination }) => {
       timeoutHandle.current = undefined;
     }
     timeoutHandle.current = setTimeout(() => {
-      console.log("setting logs", logsRef.current);
       setLogs(() => [...logsRef.current]);
       setLoading(false);
     }, 100);
