@@ -93,7 +93,7 @@ export class TrafficControl {
         value: this.target,
         enumerable: true,
       });
-      this.ee.emit("responseError", { error });
+      this.ee.emit("responseError", { error, target });
       clientResponse.writeHead(503);
       clientResponse.end(
         `Sorry, I tried to to connect to ${options.hostname}:${options.port}, but something went wrong: "${error.message}". Check that everything is up and running OK.`
