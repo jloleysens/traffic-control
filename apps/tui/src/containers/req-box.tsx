@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import chalk from "chalk";
 import { type Destination } from "traffic-control";
-import { Spinner } from "@inkjs/ui";
 
 import { LogBox, TabInfo } from "../components/index.js";
 import type { FC } from "../types.js";

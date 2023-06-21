@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useApp, useInput, Box } from "ink";
-import { FullScreen, Title } from "./components/index.js";
+import { Title } from "./components/index.js";
 import { ReqBox } from "./containers/index.js";
 import { useTrafficControl } from "./services/traffic-control.js";
 
