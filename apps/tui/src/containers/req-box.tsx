@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import chalk from "chalk";
 import { type Destination } from "traffic-control";
 
@@ -13,21 +13,40 @@ interface Props {
 }
 
 export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
+  const logsRef = useRef<string[]>([]);
+  const timeoutHandle = useRef<undefined | any>(undefined);
   const [logs, setLogs] = useState<string[]>([]);
   const { tCtrl } = useTrafficControl();
 
+  const appendLog = useCallback((log: string) => {
+    logsRef.current.push(log);
+    if (timeoutHandle.current) {
+      clearTimeout(timeoutHandle.current);
+      timeoutHandle.current = undefined;
+    }
+    timeoutHandle.current = setTimeout(() => {
+      console.log("setting logs", logsRef.current);
+      setLogs(() => [...logsRef.current]);
+    }, 100);
+  }, []);
+
   const onRequest = useCallback((req: any) => {
     if (req.target !== destination) return;
-    setLogs((prev) => {
-      return [...prev, `${chalk.green("request")} ${req.method} ${req.path}`];
-    });
+    appendLog(`${chalk.green("request")} ${req.method} ${req.path}`);
   }, []);
 
   const onError = useCallback((req: any) => {
     if (req.target !== destination) return;
-    setLogs((prev) => {
-      return [...prev, `${chalk.red("error")} ${req.message}`];
-    });
+    appendLog(`${chalk.red("error")} ${req.message}`);
+  }, []);
+
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setLogs(logsRef.current);
+    }, 100);
+    return () => {
+      clearInterval(handle);
+    };
   }, []);
 
   useEffect(() => {

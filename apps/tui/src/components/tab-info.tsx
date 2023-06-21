@@ -26,7 +26,7 @@ export const TabInfo: FC<Props> = ({ active, text, capturePaths }) => {
             <Text>
               Capturing {capturePaths![0]}
               {capturePaths!.length > 1
-                ? ` and ${capturePaths!.length} others`
+                ? ` and ${capturePaths!.length - 1} others`
                 : ""}
             </Text>
           </Badge>

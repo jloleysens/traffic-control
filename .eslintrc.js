@@ -35,6 +35,7 @@ module.exports = {
         '@typescript-eslint/prefer-includes': 'off',
         '@typescript-eslint/consistent-type-assertions': 'warn',
         '@typescript-eslint/semi': 'off',
+        '@typescript-eslint/strict-boolean-expressions': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
         'no-array-constructor': 'off',
         '@typescript-eslint/space-before-function-paren': 'off',
