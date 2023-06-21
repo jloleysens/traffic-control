@@ -37,6 +37,7 @@ export const App: React.FC = () => {
             destination="a"
           />
         </Box>
+        <Box flexGrow={0} flexBasis={1} />
         <Box flexGrow={1} flexShrink={0} width={1} flexDirection="column">
           <ReqBox
             active={active === "b"}

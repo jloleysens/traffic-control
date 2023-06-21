@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import chalk from "chalk";
 import { type Destination } from "traffic-control";
+import { Spinner } from "@inkjs/ui";
 
 import { LogBox, TabInfo } from "../components/index.js";
 import type { FC } from "../types.js";
@@ -16,10 +17,12 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
   const logsRef = useRef<string[]>([]);
   const timeoutHandle = useRef<undefined | any>(undefined);
   const [logs, setLogs] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const { tCtrl } = useTrafficControl();
 
   const appendLog = useCallback((log: string) => {
     logsRef.current.push(log);
+    setLoading(true);
     if (timeoutHandle.current) {
       clearTimeout(timeoutHandle.current);
       timeoutHandle.current = undefined;
@@ -27,6 +30,7 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
     timeoutHandle.current = setTimeout(() => {
       console.log("setting logs", logsRef.current);
       setLogs(() => [...logsRef.current]);
+      setLoading(false);
     }, 100);
   }, []);
 
@@ -59,7 +63,7 @@ export const ReqBox: FC<Props> = ({ active, tabText, destination }) => {
   }, [tCtrl]);
   return (
     <>
-      <LogBox active={active} logs={logs} />
+      <LogBox loading={loading} active={active} logs={logs} />
       <TabInfo
         active={active}
         text={tabText}
