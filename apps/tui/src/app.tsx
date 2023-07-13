@@ -6,21 +6,18 @@ import { useTrafficControl } from "./services/traffic-control.js";
 
 export const App: React.FC = () => {
   const { exit } = useApp();
+  const [active, setActive] = useState<"a" | "b">("a");
+  const { tCtrl, a, b } = useTrafficControl();
+
   useInput((input, key) => {
     if (input === "q" || key.escape === true) {
       exit();
     }
-  });
-
-  const { tCtrl, a, b } = useTrafficControl();
-
-  const [active, setActive] = useState<"a" | "b">("a");
-  useInput((input) => {
-    if (input === "1") {
+    if (input === "1" || key.leftArrow) {
       tCtrl.flipTo("a");
       setActive("a");
     }
-    if (input === "2") {
+    if (input === "2" || key.rightArrow) {
       tCtrl.flipTo("b");
       setActive("b");
     }
