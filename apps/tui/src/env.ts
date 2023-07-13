@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import meow from "meow";
 
 const cli = meow(
@@ -35,21 +35,21 @@ const cli = meow(
   }
 );
 
+function throwIfUndefinedish(value: unknown, message: string): void | never {
+  if (value == null) throw new Error(message);
+}
+
 const showHelp = cli.flags.help as unknown as boolean;
-const portA = parseInt(
-  (cli.input.at(0) as unknown as string).split(":")[1],
-  10
-);
-const portB = parseInt(
-  (cli.input.at(1) as unknown as string).split(":")[1],
-  10
-);
+throwIfUndefinedish(cli.input.at(0), "Port A must be specified, see help");
+const portA = parseInt(cli.input.at(0) as unknown as string, 10);
+throwIfUndefinedish(cli.input.at(1), "Port B must be specified, see help");
+const portB = parseInt(cli.input.at(1) as unknown as string, 10);
 
 if (!showHelp) {
   assert(
     // eslint-disable-next-line
     portA && portB,
-    `Port A & B must be specified, got Port A: "${portA}" and Port B "${portB}". Specify input for port like :<port>.`
+    `Port A & B must be specified, got Port A: "${portA}" and Port B "${portB}". See help.`
   );
 }
 

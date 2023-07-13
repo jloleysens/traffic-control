@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "turbo lint",
     "build": "turbo build",
-    "dev": "turbo dev --parallel"
+    "dev": "turbo dev --parallel",
+    "start": "pnpm run build && pnpm run --filter=tui tui --"
   },
   "keywords": [],
   "author": "",

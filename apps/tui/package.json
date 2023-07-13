@@ -11,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --project ./tsconfig.json",
     "dev": "tsc --project ./tsconfig.json --watch",
-    "lint": "prettier --write ./src/**/* index.ts"
+    "lint": "prettier --write ./src/**/* index.ts",
+    "tui": "node dist/index.js"
   },
   "keywords": [],
   "author": "",

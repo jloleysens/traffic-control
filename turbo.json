@@ -7,11 +7,12 @@
     "lint": {},
     "dev": {
       "dependsOn": ["^dev"],
-      "outputs": ["dist/**"],
+      "cache": false
+    },
+    "tui": {
+      "dependsOn": ["build"],
       "cache": false
     }
   },
-  "globalDependencies": [
-    "tsconfig.json"
-  ]
+  "globalDependencies": ["tsconfig.json"]
 }
