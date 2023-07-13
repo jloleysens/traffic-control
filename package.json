@@ -7,7 +7,7 @@
     "lint": "turbo lint",
     "build": "turbo build",
     "dev": "turbo dev --parallel",
-    "start": "pnpm run build && pnpm run --filter=tui tui --"
+    "start": "pnpm run build && pnpm run --filter=tui tui"
   },
   "keywords": [],
   "author": "",
